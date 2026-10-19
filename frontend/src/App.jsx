@@ -9,6 +9,7 @@ import Story from './components/Story';
 import Shop from './components/Shop';
 import Reviews from './components/Reviews';
 import Contact from './components/Contact';
+import Footer from './components/Footer'; // <-- Footer Import kiya
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,23 +19,21 @@ export default function App() {
   const mainRef = useRef(null);
   const lenisRef = useRef(null);
 
-  // 1. Lenis Smooth Scroll Setup
+  // ... (Aapke Lenis aur ScrollTrigger wale saare useEffects yahan rahenge) ...
+
   useEffect(() => {
     const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
     lenisRef.current = lenis;
-    
     lenis.on('scroll', ScrollTrigger.update);
     const raf = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
-
     return () => {
       gsap.ticker.remove(raf);
       lenis.destroy();
     };
   }, []);
 
-  // 2. Hero Overlay Effect
   useEffect(() => {
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
@@ -45,31 +44,24 @@ export default function App() {
         pinSpacing: false,
       });
     }, mainRef);
-
     return () => ctx.revert();
   }, []);
 
-  // 3. Navbar Links Handler (Fixed Contact Scroll)
   useEffect(() => {
     const onClick = (e) => {
       const link = e.target.closest('a[href^="#"]');
       if (!link) return;
-      
       const hash = link.getAttribute('href');
       if (!hash || hash === '#') return;
-
       e.preventDefault(); 
-
       if (hash === '#home') {
         if (lenisRef.current) lenisRef.current.scrollTo(0, { duration: 1.5 });
         else window.scrollTo({ top: 0, behavior: 'smooth' });
         window.history.replaceState(null, '', hash);
         return;
       }
-
       const target = document.querySelector(hash);
       if (target) {
-        // Thoda delay diya taaki Hero pinning first complete ho
         setTimeout(() => {
           if (lenisRef.current) {
             lenisRef.current.scrollTo(target, { offset: NAV_OFFSET, duration: 1.5 });
@@ -78,11 +70,9 @@ export default function App() {
             window.scrollTo({ top, behavior: 'smooth' });
           }
         }, 100); 
-        
         window.history.replaceState(null, '', hash);
       }
     };
-    
     document.addEventListener('click', onClick);
     return () => document.removeEventListener('click', onClick);
   }, []);
@@ -99,6 +89,7 @@ export default function App() {
       </main>
       
       <Contact />
+      <Footer /> {/* <-- Footer Yahan Add kiya */}
     </div>
   );
 }
