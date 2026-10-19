@@ -29,6 +29,7 @@ export default function Contact({ onClose }) {
 
   return (
     <div 
+      id="contact" // ID Yahan Add Kiya Hai
       ref={containerRef}
       className="relative min-h-screen bg-[#050505] text-white pt-32 pb-24 px-6 lg:px-20 overflow-hidden flex items-center"
     >
@@ -109,7 +110,6 @@ export default function Contact({ onClose }) {
               
               <form className="flex flex-col gap-8">
                 
-                {/* Input Group */}
                 <div className="relative group">
                   <input 
                     type="text" 
@@ -145,7 +145,6 @@ export default function Contact({ onClose }) {
                   </label>
                 </div>
 
-                {/* Select Dropdown */}
                 <div className="relative group">
                   <select className="peer w-full bg-transparent border-b border-white/20 py-3 text-gray-300 focus:outline-none focus:border-[#B08D57] transition-colors appearance-none cursor-pointer">
                     <option value="" disabled selected hidden>Select an option...</option>
@@ -164,7 +163,6 @@ export default function Contact({ onClose }) {
                   </div>
                 </div>
 
-                {/* Textarea */}
                 <div className="relative group mt-2">
                   <textarea 
                     rows="3" 
@@ -176,7 +174,6 @@ export default function Contact({ onClose }) {
                   </label>
                 </div>
                 
-                {/* Submit Button */}
                 <button 
                   type="button" 
                   className="mt-6 group relative w-full py-4 overflow-hidden rounded-full border border-[#B08D57] text-[#B08D57] text-xs font-semibold tracking-[0.2em] uppercase transition-all duration-500"

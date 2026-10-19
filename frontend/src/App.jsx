@@ -18,7 +18,7 @@ export default function App() {
   const mainRef = useRef(null);
   const lenisRef = useRef(null);
 
-  // 1. Lenis Smooth Scroll
+  // 1. Lenis Smooth Scroll Setup
   useEffect(() => {
     const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
     lenisRef.current = lenis;
@@ -49,7 +49,7 @@ export default function App() {
     return () => ctx.revert();
   }, []);
 
-  // 3. Navbar Links Smooth Scroll (Fixed)
+  // 3. Navbar Links Handler (Fixed Contact Scroll)
   useEffect(() => {
     const onClick = (e) => {
       const link = e.target.closest('a[href^="#"]');
@@ -69,12 +69,16 @@ export default function App() {
 
       const target = document.querySelector(hash);
       if (target) {
-        if (lenisRef.current) {
-          lenisRef.current.scrollTo(target, { offset: NAV_OFFSET, duration: 1.5 });
-        } else {
-          const top = target.getBoundingClientRect().top + window.scrollY + NAV_OFFSET;
-          window.scrollTo({ top, behavior: 'smooth' });
-        }
+        // Thoda delay diya taaki Hero pinning first complete ho
+        setTimeout(() => {
+          if (lenisRef.current) {
+            lenisRef.current.scrollTo(target, { offset: NAV_OFFSET, duration: 1.5 });
+          } else {
+            const top = target.getBoundingClientRect().top + window.scrollY + NAV_OFFSET;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+        }, 100); 
+        
         window.history.replaceState(null, '', hash);
       }
     };

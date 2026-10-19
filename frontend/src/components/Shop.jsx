@@ -40,10 +40,10 @@ function Card({ p, index, onOpen, isLarge }) {
       const r = card.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width - 0.5;
       const y = (e.clientY - r.top) / r.height - 0.5;
-      ry(x * 14);
-      rx(-y * 10);
-      ix(-x * 18); 
-      iy(-y * 18);
+      ry(x * 10);
+      rx(-y * 8);
+      ix(-x * 15); 
+      iy(-y * 15);
       card.style.setProperty('--gx', `${(x + 0.5) * 100}%`);
       card.style.setProperty('--gy', `${(y + 0.5) * 100}%`);
     };
@@ -61,10 +61,8 @@ function Card({ p, index, onOpen, isLarge }) {
       ref={cardRef}
       type="button"
       onClick={() => onOpen(index, cardRef.current)}
-      aria-label={`Open ${p.name}`}
-      className={`shop-card group relative block w-full rounded-3xl border border-[#1A1A1A]/5 bg-white p-4 text-left shadow-[0_10px_40px_rgba(0,0,0,0.04)] transition-shadow duration-500 [transform-style:preserve-3d] hover:shadow-[0_35px_70px_-20px_rgba(176,141,87,0.35)] ${isLarge ? 'h-full flex flex-col' : ''}`}
+      className={`shop-card group relative flex flex-col w-full rounded-3xl border border-[#1A1A1A]/5 bg-white p-4 text-left shadow-[0_10px_40px_rgba(0,0,0,0.04)] transition-shadow duration-500 [transform-style:preserve-3d] hover:shadow-[0_35px_70px_-20px_rgba(176,141,87,0.35)] ${isLarge ? 'h-full' : ''}`}
     >
-      {/* Image Container (Aspect Ratio changes based on size) */}
       <div className={`relative mb-6 overflow-hidden rounded-2xl ${isLarge ? 'aspect-[4/3] flex-grow' : 'aspect-[4/3]'}`} style={{ backgroundColor: `${p.accent}14` }}>
         <img
           ref={imgRef}
@@ -73,23 +71,18 @@ function Card({ p, index, onOpen, isLarge }) {
           loading="lazy"
           className="h-full w-full scale-[1.12] object-cover transition-[filter] duration-700 group-hover:brightness-105"
         />
-
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-0 mix-blend-soft-light transition-opacity duration-500 group-hover:opacity-100"
           style={{ background: 'radial-gradient(circle at var(--gx,50%) var(--gy,50%), rgba(255,255,255,0.75), transparent 55%)' }}
         />
-
         <span className="absolute left-4 top-4 rounded-full border border-white/60 bg-white/85 px-4 py-1.5 text-[10px] font-medium tracking-[0.15em] text-[#1A1A1A]/70 backdrop-blur-md">
           {p.size.replace(' ', '')} · EDP
         </span>
         <span className="absolute right-4 top-4 font-serif text-sm text-white/90 drop-shadow">0{index + 1}</span>
-
-        <span className="absolute inset-x-4 bottom-4 flex translate-y-[140%] items-center justify-between rounded-full bg-[#1A1A1A]/85 px-5 py-3 text-[11px] uppercase tracking-[0.25em] text-white backdrop-blur-md transition-transform duration-500 ease-luxe group-hover:translate-y-0">
+        <span className="absolute inset-x-4 bottom-4 flex translate-y-[140%] items-center justify-between rounded-full bg-[#1A1A1A]/85 px-5 py-3 text-[11px] uppercase tracking-[0.25em] text-white backdrop-blur-md transition-transform duration-500 group-hover:translate-y-0">
           Discover
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M7 17 17 7M9 7h8v8" />
-          </svg>
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17 17 7M9 7h8v8" /></svg>
         </span>
       </div>
 
@@ -99,9 +92,7 @@ function Card({ p, index, onOpen, isLarge }) {
             <span className="h-2 w-2 rounded-full transition-transform duration-500 group-hover:scale-150" style={{ backgroundColor: p.accent }} />
             <h3 className={`font-serif text-[#1A1A1A] ${isLarge ? 'text-2xl' : 'text-xl'}`}>{p.name}</h3>
           </div>
-          <span className="rounded-full border border-[#1A1A1A]/10 px-3 py-1 text-[10px] uppercase tracking-wider text-[#1A1A1A]/50">
-            {p.size}
-          </span>
+          <span className="rounded-full border border-[#1A1A1A]/10 px-3 py-1 text-[10px] uppercase tracking-wider text-[#1A1A1A]/50">{p.size}</span>
         </div>
         <p className="ml-5 text-sm text-[#1A1A1A]/55">{p.desc}</p>
       </div>
@@ -111,15 +102,13 @@ function Card({ p, index, onOpen, isLarge }) {
 
 /* ======================= Full View (Modal) ======================= */
 function FullView({ index, originEl, onClose, onChange }) {
-  // ... (Yeh aapka wahi FullView code rahega jo aapne diya tha, maine isme koi change nahi kiya) ...
-  // Choti file rakhne ke liye maine isko is message mein short kiya hai, par aap isko same rakh sakte hain.
   const wrapRef = useRef(null);
   const panelRef = useRef(null);
   const p = PERFUMES[index];
   const closing = useRef(false);
+  const firstRun = useRef(true);
 
   useLayoutEffect(() => {
-    const panel = panelRef.current;
     const r = originEl.getBoundingClientRect();
     const ctx = gsap.context(() => {
       if (reduceMotion()) return;
@@ -127,14 +116,13 @@ function FullView({ index, originEl, onClose, onChange }) {
       gsap.set('.fv-img', { scale: 1.25 });
       gsap.timeline({ defaults: { ease: 'expo.inOut' } })
         .fromTo('.fv-backdrop', { opacity: 0 }, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 0)
-        .fromTo(panel, { top: r.top, left: r.left, width: r.width, height: r.height, borderRadius: 24 }, { top: 0, left: 0, width: '100%', height: '100%', borderRadius: 0, duration: 1 }, 0)
+        .fromTo(panelRef.current, { top: r.top, left: r.left, width: r.width, height: r.height, borderRadius: 24 }, { top: 0, left: 0, width: '100%', height: '100%', borderRadius: 0, duration: 1 }, 0)
         .to('.fv-img', { scale: 1, duration: 1.4, ease: 'expo.out' }, 0.3)
         .to('.fv-in', { opacity: 1, y: 0, duration: 0.9, stagger: 0.07, ease: 'expo.out' }, 0.6);
     }, wrapRef);
     return () => ctx.revert();
   }, []);
 
-  const firstRun = useRef(true);
   useEffect(() => {
     if (firstRun.current) { firstRun.current = false; return; }
     if (reduceMotion()) return;
@@ -162,10 +150,7 @@ function FullView({ index, originEl, onClose, onChange }) {
     window.addEventListener('keydown', onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prev;
-    };
+    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
   }, [close, onChange]);
 
   const waText = encodeURIComponent(`Hi Rupur, I'd like to order ${p.name} (${p.size}).`);
@@ -241,7 +226,7 @@ export default function Shop() {
   const change = useCallback((d) => setOpen((o) => o && { ...o, index: (o.index + d + PERFUMES.length) % PERFUMES.length }), []);
 
   return (
-    <section id="collection" ref={sectionRef} className="relative z-20 min-h-screen overflow-hidden bg-[#F8F5EE] py-24 shadow-[0_-30px_80px_-20px_rgba(0,0,0,0.5)] lg:py-32">
+    <section id="shop" ref={sectionRef} className="relative z-20 min-h-screen overflow-hidden bg-[#F8F5EE] py-24 shadow-[0_-30px_80px_-20px_rgba(0,0,0,0.5)] lg:py-32">
       <div aria-hidden className="pointer-events-none absolute -left-40 top-20 h-[30rem] w-[30rem] rounded-full blur-[120px]" style={{ backgroundColor: GOLD, opacity: 0.1 }} />
 
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-20">
@@ -267,7 +252,7 @@ export default function Shop() {
           </p>
         </div>
 
-        {/* --- NAYA LAYOUT: 2 Upar, 3 Niche --- */}
+        {/* Grid: 2 Top, 3 Bottom */}
         <div className="grid grid-cols-6 gap-6 lg:gap-8">
           
           {/* Top Row: 2 Items (col-span-3 each) */}
