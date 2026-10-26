@@ -8,14 +8,14 @@ const LINKS = [
   { label: 'Contact', href: '#contact' },
 ];
 
-// Height: mobile 64px, computer 80px (Hero me pt-16 md:pt-20 isi wajah se hai)
+// Height: mobile 56px (h-14), desktop 80px (md:h-20)
+// Hero me pt-14 md:pt-20 isi wajah se hai
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [active, setActive] = useState('#home');
 
-  // Scroll: neeche jao toh navbar chhup jaye, upar aao toh wapas aaye
   useEffect(() => {
     let last = window.scrollY;
     const onScroll = () => {
@@ -24,8 +24,6 @@ export default function Navbar() {
       setHidden(y > 300 && y > last + 4);
       if (y < last - 4) setHidden(false);
       last = y;
-
-      // Kaunsa section screen pe hai, uska link highlight
       for (const l of [...LINKS].reverse()) {
         const el = document.querySelector(l.href);
         if (el && el.getBoundingClientRect().top < 140) { setActive(l.href); break; }
@@ -46,27 +44,25 @@ export default function Navbar() {
       <header
         className={`nav-in fixed inset-x-0 top-0 z-[200] transition-all duration-500 ease-[cubic-bezier(.2,.8,.2,1)]
           ${hidden && !open ? '-translate-y-full' : 'translate-y-0'}
-          ${scrolled ? 'bg-[#120B08]/85 shadow-[0_10px_30px_-12px_rgba(0,0,0,.6)] backdrop-blur-xl' : 'bg-[#120B08]'}`}
+          ${scrolled || open ? 'bg-[#120B08]/95 backdrop-blur-xl' : 'bg-[#120B08]'}`}
       >
-        <div className="mx-auto grid h-16 max-w-[1500px] grid-cols-[1fr_auto_1fr] items-center px-4 md:h-20 md:px-8 lg:grid-cols-[auto_1fr_auto]">
-          {/* Mobile menu button */}
+        <div className="mx-auto grid h-14 max-w-[1500px] grid-cols-[48px_1fr_48px] items-center px-2 md:h-20 md:px-8 lg:grid-cols-[auto_1fr_auto]">
+          {/* Mobile: menu button (left) */}
           <button
             onClick={() => setOpen((o) => !o)}
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
-            className="relative h-10 w-10 lg:hidden"
+            className="relative h-12 w-12 lg:hidden"
           >
-            <span className={`absolute left-2 h-[2px] w-6 rounded bg-white transition-all duration-300 ${open ? 'top-[19px] rotate-45' : 'top-[13px]'}`} />
-            <span className={`absolute left-2 top-[19px] h-[2px] rounded bg-white transition-all duration-300 ${open ? 'w-0 opacity-0' : 'w-4 opacity-100'}`} />
-            <span className={`absolute left-2 h-[2px] w-6 rounded bg-white transition-all duration-300 ${open ? 'top-[19px] -rotate-45' : 'top-[25px]'}`} />
+            <span className={`absolute left-3 h-[2px] w-6 rounded bg-white transition-all duration-300 ${open ? 'top-[23px] rotate-45' : 'top-[17px]'}`} />
+            <span className={`absolute left-3 top-[23px] h-[2px] w-6 rounded bg-white transition-all duration-300 ${open ? 'opacity-0' : 'opacity-100'}`} />
+            <span className={`absolute left-3 h-[2px] w-6 rounded bg-white transition-all duration-300 ${open ? 'top-[23px] -rotate-45' : 'top-[29px]'}`} />
           </button>
 
-          {/* Logo */}
-          <a href="#home" onClick={() => setOpen(false)} className="group justify-self-center text-center leading-none lg:justify-self-start lg:text-left">
-            <span className="logo-shine block font-serif text-[26px] tracking-[0.22em] text-white transition-[letter-spacing] duration-500 group-hover:tracking-[0.3em] md:text-[30px]">
-              RUPUR
-            </span>
-            <span className="mt-1 block text-[9px] tracking-[0.35em] text-[#D9A35B] md:text-[10px]">FRAGRANCE YOU FEEL</span>
+          {/* Logo: mobile me bilkul beech me, tagline sirf desktop pe */}
+          <a href="#home" onClick={() => setOpen(false)} className="justify-self-center text-center leading-none lg:justify-self-start">
+            <span className="block font-serif text-[22px] tracking-[0.2em] text-white md:text-[30px]">RUPUR</span>
+            <span className="mt-1 hidden text-[10px] tracking-[0.35em] text-[#D9A35B] md:block">FRAGRANCE YOU FEEL</span>
           </a>
 
           {/* Desktop links */}
@@ -84,7 +80,7 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* Right side */}
+          {/* Right: cart (mobile), Shop Now + cart (desktop) */}
           <div className="flex items-center justify-self-end gap-2">
             <a
               href="#shop"
@@ -92,7 +88,7 @@ export default function Navbar() {
             >
               Shop Now
             </a>
-            <a href="#shop" aria-label="Cart" className="grid h-10 w-10 place-items-center rounded-full text-white transition hover:bg-white/10">
+            <a href="#shop" aria-label="Cart" className="grid h-12 w-12 place-items-center rounded-full text-white transition active:bg-white/10 lg:hover:bg-white/10">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="h-6 w-6">
                 <path d="M5 8h14l-1.2 11.2a2 2 0 01-2 1.8H8.2a2 2 0 01-2-1.8L5 8z" strokeLinejoin="round" />
                 <path d="M9 8V6.5a3 3 0 016 0V8" />
@@ -101,38 +97,45 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Neeche ek patli sunehri line jo scroll ke saath bharti hai */}
         <ScrollProgress />
       </header>
 
-      {/* Mobile full-screen menu */}
+      {/* Mobile menu: header ke neeche se shuru, upar se overlap nahi */}
       <div
-        className={`fixed inset-0 z-[190] bg-[#120B08] transition-[clip-path] duration-700 ease-[cubic-bezier(.7,0,.2,1)] lg:hidden ${
-          open ? '[clip-path:circle(150%_at_28px_32px)]' : 'pointer-events-none [clip-path:circle(0%_at_28px_32px)]'
+        className={`fixed inset-x-0 bottom-0 top-14 z-[190] bg-[#120B08] transition-opacity duration-300 lg:hidden ${
+          open ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
       >
-        <ul className="flex h-full flex-col justify-center gap-2 px-8">
-          {LINKS.map((l, i) => (
-            <li key={l.href} className="overflow-hidden">
-              <a
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className={`block py-2 font-serif text-5xl text-white transition-all duration-700 ease-[cubic-bezier(.2,.8,.2,1)] ${
-                  open ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
-                }`}
-                style={{ transitionDelay: open ? `${200 + i * 70}ms` : '0ms' }}
-              >
-                {l.label}
-              </a>
-            </li>
-          ))}
-          <li
-            className={`mt-8 text-sm text-[#D9A35B] transition-opacity duration-700 ${open ? 'opacity-100' : 'opacity-0'}`}
-            style={{ transitionDelay: open ? '650ms' : '0ms' }}
+        <div className="flex h-full flex-col px-6 pb-8 pt-4">
+          <ul className="flex-1">
+            {LINKS.map((l, i) => (
+              <li key={l.href} className="border-b border-white/10">
+                <a
+                  href={l.href}
+                  onClick={() => setOpen(false)}
+                  className={`flex items-center justify-between py-5 font-serif text-[28px] text-white transition-all duration-500 ease-[cubic-bezier(.2,.8,.2,1)] ${
+                    open ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'
+                  }`}
+                  style={{ transitionDelay: open ? `${80 + i * 60}ms` : '0ms' }}
+                >
+                  {l.label}
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 text-[#D9A35B]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg>
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <a
+            href="#shop"
+            onClick={() => setOpen(false)}
+            className="grid h-14 place-items-center rounded-2xl bg-[#E8562A] text-lg font-semibold text-white active:scale-[.98]"
           >
-            +91 79872 66411 · rupurperfumes@gmail.com
-          </li>
-        </ul>
+            Shop Now
+          </a>
+          <p className="mt-5 text-center text-sm leading-relaxed text-[#D9A35B]">
+            +91 79872 66411<br />rupurperfumes@gmail.com
+          </p>
+        </div>
       </div>
 
       <style>{`
@@ -153,16 +156,8 @@ export default function Navbar() {
         }
         @keyframes shine { 0%, 60% { left: -60%; } 100% { left: 130%; } }
 
-        .logo-shine {
-          background: linear-gradient(110deg, #fff 40%, #F3D59B 50%, #fff 60%);
-          background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
-          animation: logoShine 5s linear infinite;
-        }
-        @keyframes logoShine { from { background-position: 100% 0; } to { background-position: -150% 0; } }
-
         @media (prefers-reduced-motion: reduce) {
-          .nav-in, .btn-shine::after, .logo-shine { animation: none; }
-          .logo-shine { color: #fff; background: none; }
+          .nav-in, .btn-shine::after { animation: none; }
         }
       `}</style>
     </>
