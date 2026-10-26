@@ -4,42 +4,47 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const EXPLORE = [
+  { label: 'Home', href: '#home' },
+  { label: 'Shop Collection', href: '#shop' },
+  { label: 'Our Story', href: '#story' },
+  { label: 'Reviews', href: '#reviews' },
+];
+
+const SOCIALS = [
+  { name: 'Instagram', icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg> },
+  { name: 'Facebook', icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg> },
+  { name: 'Twitter', icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg> },
+];
+
 export default function Footer() {
   const footerRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Main Entrance Animation
-      gsap.from(".footer-reveal", {
-        scrollTrigger: {
-          trigger: footerRef.current,
-          start: 'top 85%',
-        },
-        y: 60,
+      gsap.from('.footer-reveal', {
+        scrollTrigger: { trigger: footerRef.current, start: 'top 85%' },
+        y: 40,
         opacity: 0,
-        duration: 1.2,
-        stagger: 0.1,
+        duration: 1,
+        stagger: 0.08,
         ease: 'power4.out',
       });
 
-      // 2. Text Mask Reveal Effect (Bade text ke liye)
-      gsap.from(".text-reveal", {
-        scrollTrigger: {
-          trigger: footerRef.current,
-          start: 'top 85%',
-        },
+      gsap.from('.text-reveal', {
+        scrollTrigger: { trigger: footerRef.current, start: 'top 85%' },
         yPercent: 120,
         duration: 1.2,
         stagger: 0.1,
         ease: 'expo.out',
       });
 
-      // 3. Background Marquee Infinite Scroll
-      gsap.to(".footer-marquee", {
+      // Marquee: text 2 baar hai, isliye -50% pe seamless loop banta hai
+      gsap.to('.footer-marquee', {
         xPercent: -50,
         repeat: -1,
-        duration: 20,
-        ease: "linear",
+        duration: 25,
+        ease: 'linear',
       });
     }, footerRef);
 
@@ -47,142 +52,131 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer 
-      ref={footerRef} 
-      className="relative bg-[#050505] text-white pt-24 overflow-hidden border-t border-[#FFFFFF10]"
+    <footer
+      ref={footerRef}
+      className="relative overflow-hidden border-t border-white/10 bg-[#050505] pt-14 text-white md:pt-24"
     >
-      {/* Background Infinite Marquee */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] pointer-events-none select-none">
-        <div className="footer-marquee flex whitespace-nowrap">
-          <h1 className="text-[20vw] font-serif leading-none tracking-widest text-white">
-            RUPUR • FRAGRANCE • RUPUR • FRAGRANCE •
-          </h1>
+      {/* Background marquee */}
+      <div className="pointer-events-none absolute left-0 top-0 w-full select-none overflow-hidden opacity-[0.04]">
+        <div className="footer-marquee flex w-max whitespace-nowrap">
+          {[0, 1].map((k) => (
+            <span key={k} className="font-serif text-[28vw] leading-none tracking-widest text-white md:text-[20vw]">
+              RUPUR • FRAGRANCE •&nbsp;
+            </span>
+          ))}
         </div>
       </div>
 
-      {/* Top Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#B08D57]/10 rounded-full blur-[120px] pointer-events-none" />
+      {/* Top glow */}
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[220px] w-[520px] max-w-full -translate-x-1/2 rounded-full bg-[#B08D57]/10 blur-[100px] md:h-[300px] md:w-[800px]" />
 
-      <div className="max-w-[1600px] mx-auto px-6 lg:px-20 relative z-10">
-        
-        {/* Top CTA Section */}
-        <div className="mb-24 pb-24 border-b border-[#FFFFFF10] flex flex-col lg:flex-row justify-between items-start lg:items-end gap-12">
+      <div className="relative z-10 mx-auto max-w-[1600px] px-5 md:px-10 lg:px-20">
+        {/* ===== CTA ===== */}
+        <div className="mb-12 flex flex-col items-start justify-between gap-8 border-b border-white/10 pb-12 md:mb-24 md:pb-24 lg:flex-row lg:items-end lg:gap-12">
           <div>
-            <p className="footer-reveal text-[#B08D57] tracking-[0.4em] text-xs uppercase mb-6">The Experience</p>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-serif leading-[1.05]">
-              <span className="block overflow-hidden pb-2">
+            <p className="footer-reveal mb-4 text-xs tracking-[0.3em] text-[#B08D57] md:mb-6 md:tracking-[0.4em]">The Experience</p>
+            <h2 className="font-serif text-[40px] leading-[1.1] md:text-7xl lg:text-8xl lg:leading-[1.05]">
+              <span className="block overflow-hidden pb-1 md:pb-2">
                 <span className="text-reveal block">Ready to find</span>
               </span>
-              <span className="block overflow-hidden pb-2">
+              <span className="block overflow-hidden pb-1 md:pb-2">
                 <span className="text-reveal block italic text-[#B08D57]">your signature?</span>
               </span>
             </h2>
           </div>
-          <a 
-            href="#shop" 
-            className="footer-reveal group relative inline-flex items-center justify-center px-10 py-5 bg-white text-black overflow-hidden rounded-full font-medium tracking-widest uppercase text-sm"
+          <a
+            href="#shop"
+            className="footer-reveal group relative flex w-full items-center justify-center overflow-hidden rounded-full bg-white px-8 py-4 text-sm font-medium tracking-widest text-black active:scale-[.98] md:inline-flex md:w-auto md:px-10 md:py-5"
           >
-            <span className="absolute inset-0 bg-[#B08D57] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)]"></span>
-            <span className="relative z-10 group-hover:text-white transition-colors duration-500 flex items-center gap-3">
+            <span className="absolute inset-0 translate-y-full bg-[#B08D57] transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:translate-y-0"></span>
+            <span className="relative z-10 flex items-center gap-3 transition-colors duration-500 group-hover:text-white">
               Explore Collection
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-500">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>
             </span>
           </a>
         </div>
 
-        {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20">
-          
-          {/* Brand Area */}
-          <div className="md:col-span-5 footer-reveal">
-            <a href="#home" className="inline-flex flex-col items-start mb-8 group">
-              <span 
-                className="text-4xl text-white tracking-[0.2em] transition-transform duration-500 group-hover:-translate-y-1" 
-                style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
-              >
+        {/* ===== MAIN GRID ===== */}
+        <div className="mb-12 grid grid-cols-2 gap-x-6 gap-y-10 md:mb-20 md:grid-cols-12 md:gap-12">
+          {/* Brand: mobile pe full width */}
+          <div className="footer-reveal col-span-2 md:col-span-5">
+            <a href="#home" className="group mb-5 inline-flex flex-col items-start md:mb-8">
+              <span className="text-3xl tracking-[0.2em] text-white transition-transform duration-500 group-hover:-translate-y-1 md:text-4xl" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>
                 RUPUR
               </span>
-              <span className="text-[10px] text-[#B08D57] tracking-[0.4em] uppercase mt-2 transition-all duration-500 group-hover:tracking-[0.5em]">
-                Fragrance You Feel
-              </span>
+              <span className="mt-2 text-[10px] tracking-[0.35em] text-[#B08D57]">FRAGRANCE YOU FEEL</span>
             </a>
-            <p className="text-gray-400 text-sm leading-relaxed max-w-sm mb-10">
+            <p className="mb-6 max-w-sm text-sm leading-relaxed text-gray-400 md:mb-10">
               Slow-steeped with botanicals, traditional attars, and aged sandalwood. Experience the essence of India in every bottle.
             </p>
-            
-            {/* Social Icons with Hover Fill */}
             <div className="flex gap-3">
-              {[
-                { name: 'Instagram', icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg> },
-                { name: 'Facebook', icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg> },
-                { name: 'Twitter', icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg> }
-              ].map((social, i) => (
-                <a 
-                  key={i}
-                  href="#" 
-                  className="group relative flex h-12 w-12 items-center justify-center rounded-full bg-[#111] border border-white/5 text-gray-400 transition-all duration-500 hover:-translate-y-1 hover:text-black"
+              {SOCIALS.map((s) => (
+                <a
+                  key={s.name}
+                  href="#"
+                  aria-label={s.name}
+                  className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#111] text-gray-300 transition-all duration-500 active:scale-95 md:h-12 md:w-12 md:hover:-translate-y-1 md:hover:text-black"
                 >
-                  <span className="absolute inset-0 bg-[#B08D57] scale-0 rounded-full transition-transform duration-500 ease-out group-hover:scale-100"></span>
-                  <span className="relative z-10">{social.icon}</span>
+                  <span className="absolute inset-0 scale-0 rounded-full bg-[#B08D57] transition-transform duration-500 ease-out group-hover:scale-100"></span>
+                  <span className="relative z-10">{s.icon}</span>
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Spacer for Desktop */}
-          <div className="hidden md:block md:col-span-2"></div>
+          <div className="hidden md:col-span-2 md:block"></div>
 
-          {/* Links */}
-          <div className="md:col-span-2 footer-reveal">
-            <h4 className="text-white text-xs tracking-[0.2em] uppercase mb-6 font-semibold">Explore</h4>
-            <ul className="space-y-4">
-              {['Home', 'Shop Collection', 'Our Story', 'Reviews'].map((item) => (
-                <li key={item}>
-                  <a href={`#${item === 'Our Story' ? 'story' : item === 'Shop Collection' ? 'shop' : item.toLowerCase()}`} className="group relative text-gray-400 text-sm hover:text-white transition-colors inline-block">
-                    {item}
-                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#B08D57] transition-all duration-300 group-hover:w-full"></span>
+          {/* Explore: mobile pe aadhi width */}
+          <div className="footer-reveal md:col-span-2">
+            <h4 className="mb-5 text-xs font-semibold tracking-[0.2em] text-white md:mb-6">Explore</h4>
+            <ul className="space-y-3 md:space-y-4">
+              {EXPLORE.map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} className="group relative inline-block py-1 text-sm text-gray-400 transition-colors hover:text-white">
+                    {l.label}
+                    <span className="absolute -bottom-0.5 left-0 h-[1px] w-0 bg-[#B08D57] transition-all duration-300 group-hover:w-full"></span>
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact */}
-          <div className="md:col-span-3 footer-reveal">
-            <h4 className="text-white text-xs tracking-[0.2em] uppercase mb-6 font-semibold">Contact</h4>
-            <ul className="space-y-5 text-sm text-gray-400">
+          {/* Contact: mobile pe aadhi width, email wrap hota hai */}
+          <div className="footer-reveal md:col-span-3">
+            <h4 className="mb-5 text-xs font-semibold tracking-[0.2em] text-white md:mb-6">Contact</h4>
+            <ul className="space-y-4 text-sm text-gray-400 md:space-y-5">
               <li>
-                <span className="block text-[#B08D57] text-[9px] uppercase tracking-widest mb-1">Email</span>
-                <a href="mailto:rupurperfumes@gmail.com" className="hover:text-white transition-colors text-base font-serif">rupurperfumes@gmail.com</a>
+                <span className="mb-1 block text-[10px] tracking-widest text-[#B08D57]">Email</span>
+                <a href="mailto:rupurperfumes@gmail.com" className="break-all font-serif text-sm transition-colors hover:text-white md:text-base">rupurperfumes@gmail.com</a>
               </li>
               <li>
-                <span className="block text-[#B08D57] text-[9px] uppercase tracking-widest mb-1">Call Us</span>
-                <a href="tel:+917987266411" className="hover:text-white transition-colors text-base font-serif">+91 79872 66411</a>
-              </li>
-              <li>
-                <span className="block text-[#B08D57] text-[9px] uppercase tracking-widest mb-1">Visit</span>
-                <span className="leading-relaxed text-xs">In front of Tehsil, Kalapipal Mandi<br/>Dist. Shajapur, M.P.</span>
+                <span className="mb-1 block text-[10px] tracking-widest text-[#B08D57]">Call Us</span>
+                <a href="tel:+917987266411" className="font-serif text-sm transition-colors hover:text-white md:text-base">+91 79872 66411</a>
               </li>
             </ul>
           </div>
+
+          {/* Address: mobile pe full width */}
+          <div className="footer-reveal col-span-2 md:hidden">
+            <span className="mb-1 block text-[10px] tracking-widest text-[#B08D57]">Visit</span>
+            <p className="text-sm leading-relaxed text-gray-400">In front of Tehsil, Kalapipal Mandi<br />Dist. Shajapur, M.P.</p>
+          </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-[#FFFFFF10] flex flex-col md:flex-row justify-between items-center gap-6 footer-reveal">
-          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+        {/* ===== BOTTOM BAR ===== */}
+        <div className="footer-reveal flex flex-col items-center justify-between gap-4 border-t border-white/10 py-6 text-center md:flex-row md:gap-6 md:pb-8 md:pt-8 md:text-left">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-gray-500">
             <span>© {new Date().getFullYear()} RUPUR Fragrances.</span>
             <span className="hidden md:inline">|</span>
             <span>Made in India 🇮🇳</span>
           </div>
-          
           <div className="flex gap-6">
-            <a href="#" className="text-xs text-gray-500 hover:text-[#B08D57] transition-colors">Privacy Policy</a>
-            <a href="#" className="text-xs text-gray-500 hover:text-[#B08D57] transition-colors">Terms of Service</a>
+            <a href="#" className="py-1 text-xs text-gray-500 transition-colors hover:text-[#B08D57]">Privacy Policy</a>
+            <a href="#" className="py-1 text-xs text-gray-500 transition-colors hover:text-[#B08D57]">Terms of Service</a>
           </div>
         </div>
-
       </div>
     </footer>
   );
