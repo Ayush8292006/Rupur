@@ -15,7 +15,7 @@ const PERFUMES = [
   { name: 'Sea Faze', desc: 'Salt air and a cool breeze', size: '30 ML', img: '/img/seafaze.webp', accent: '#1F5FA8' },
 ];
 
-const WHATSAPP = '917987266411';
+const WHATSAPP = '919713620850';
 const GOLD = '#B08D57';
 const INK = '#1A1A1A';
 
@@ -279,3 +279,4 @@ export default function Shop() {
     </section>
   );
 }
+

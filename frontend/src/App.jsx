@@ -9,18 +9,17 @@ import Story from './components/Story';
 import Shop from './components/Shop';
 import Reviews from './components/Reviews';
 import Contact from './components/Contact';
-import Footer from './components/Footer'; // <-- Footer Import kiya
+import Footer from './components/Footer';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const NAV_OFFSET = -70;
+const NAV_OFFSET = -90;
 
 export default function App() {
   const mainRef = useRef(null);
   const lenisRef = useRef(null);
 
-  // ... (Aapke Lenis aur ScrollTrigger wale saare useEffects yahan rahenge) ...
-
+  // Smooth scroll
   useEffect(() => {
     const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
     lenisRef.current = lenis;
@@ -34,26 +33,14 @@ export default function App() {
     };
   }, []);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: "#home",
-        start: "top top",
-        end: "bottom top",
-        pin: true,
-        pinSpacing: false,
-      });
-    }, mainRef);
-    return () => ctx.revert();
-  }, []);
-
+  // #shop, #story jaise links pe click karne par smooth scroll
   useEffect(() => {
     const onClick = (e) => {
       const link = e.target.closest('a[href^="#"]');
       if (!link) return;
       const hash = link.getAttribute('href');
       if (!hash || hash === '#') return;
-      e.preventDefault(); 
+      e.preventDefault();
       if (hash === '#home') {
         if (lenisRef.current) lenisRef.current.scrollTo(0, { duration: 1.5 });
         else window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -69,7 +56,7 @@ export default function App() {
             const top = target.getBoundingClientRect().top + window.scrollY + NAV_OFFSET;
             window.scrollTo({ top, behavior: 'smooth' });
           }
-        }, 100); 
+        }, 100);
         window.history.replaceState(null, '', hash);
       }
     };
@@ -78,18 +65,18 @@ export default function App() {
   }, []);
 
   return (
-    <div ref={mainRef} className="min-h-screen bg-[#0A0A0A]">
+    <div ref={mainRef} className="min-h-screen bg-white pb-24 md:pb-0">
       <Navbar />
-      
+
       <main>
         <Hero />
-        <Story />
         <Shop />
+        <Story />
         <Reviews />
       </main>
-      
+
       <Contact />
-      <Footer /> {/* <-- Footer Yahan Add kiya */}
+      <Footer />
     </div>
   );
 }
