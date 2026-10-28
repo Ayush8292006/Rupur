@@ -1,22 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 
-/* =========================================================
-   RUPUR Home (dark luxe, mobile-first)
-   Mobile: photo neeche dark me fade hoti hai, text us dark jagah pe
-   Desktop: text photo ke upar
-   ========================================================= */
-
 const IMG_BASE = 'https://idyllic-tarsier-20717f.netlify.app';
-const CTA = '#E8562A';
-const GOLD = '#D9A35B';
-const SLIDE_TIME = 5000;
+const VIDEO = '/rupur-video.mp4';
+const POSTER = '/rupur-poster.jpg';
 
-const OFFERS = [
-  'Free Shipping above ₹999',
-  '5% OFF on Prepaid Orders',
-  'COD Available across India',
-  'Made in Kalapipal, M.P.',
-];
+const HERO = {
+  title: 'RUPUR',
+  tagline: 'Fragrance you feel',
+  primary: { label: 'Shop Now', href: '#shop' },
+  secondary: { label: 'Our Story', href: '#story' },
+};
 
 const TRUST = [
   { t: 'Free Shipping', s: 'above ₹999', d: 'M3 7h11v9H3zM14 10h4l3 3v3h-7M7 19a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM17 19a1.5 1.5 0 100-3 1.5 1.5 0 000 3z' },
@@ -24,41 +17,17 @@ const TRUST = [
   { t: 'COD', s: 'all India', d: 'M3 7h18v10H3zM12 14a2 2 0 100-4 2 2 0 000 4zM6 10v.01M18 14v.01' },
 ];
 
-const SLIDES = [
-  {
-    img: IMG_BASE + '/img/romantic-poster.webp',
-    lines: ['A fragrance that tells stories,', 'creates memories &'],
-    italic: 'lingers beyond the season.',
-    primary: { label: 'Shop All', href: '#shop' },
-    secondary: { label: 'Shop Gift Sets', href: '#shop' },
-  },
-  {
-    img: IMG_BASE + '/img/dhaval.webp',
-    lines: ['DHAVAL', 'Fresh, clean & woody.'],
-    italic: 'Made for every day.',
-    primary: { label: 'Shop All', href: '#shop' },
-    secondary: { label: 'Shop Dhaval', href: '#shop' },
-  },
-  {
-    img: IMG_BASE + '/img/seafaze.webp',
-    lines: ['SEA FAZE', 'Sea breeze & citrus.'],
-    italic: 'Cool on the hottest days.',
-    primary: { label: 'Shop All', href: '#shop' },
-    secondary: { label: 'Shop Sea Faze', href: '#shop' },
-  },
-];
-
 const CATEGORIES = [
-  { label: 'Men', href: '#shop', icon: 'men' },
-  { label: 'Women', href: '#shop', icon: 'women' },
-  { label: 'Unisex', href: '#shop', icon: 'unisex' },
-  { label: 'Attar', href: '#shop', icon: 'attar' },
+  { label: 'Men', filter: 'Men', icon: 'men' },
+  { label: 'Women', filter: 'Women', icon: 'women' },
+  { label: 'Unisex', filter: 'Unisex', icon: 'unisex' },
+  { label: 'Attar', filter: 'Attar', icon: 'attar' },
 ];
 
 const COLLECTIONS = [
-  { title: 'Perfume Spray', sub: 'Every spray, a mood', img: IMG_BASE + '/img/ira.webp', href: '#shop' },
-  { title: 'Roll-On Attar', sub: 'Pure oils, no alcohol', img: IMG_BASE + '/img/giraft.webp', href: '#shop' },
-  { title: 'Gift Sets', sub: 'Boxed & ready to gift', img: IMG_BASE + '/img/romantic.webp', href: '#shop' },
+  { title: 'Perfume Spray', sub: 'Every spray, a mood', img: IMG_BASE + '/img/ira.webp', filter: 'All' },
+  { title: 'Roll-On Attar', sub: 'Pure oils, no alcohol', img: IMG_BASE + '/img/giraft.webp', filter: 'Attar' },
+  { title: 'Gift Sets', sub: 'Boxed & ready to gift', img: IMG_BASE + '/img/romantic.webp', filter: 'All' },
 ];
 
 function useReveal() {
@@ -77,235 +46,260 @@ function useReveal() {
 }
 
 function GenderIcon({ type }) {
-  const stroke = { fill: 'none', stroke: 'currentColor', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round' };
-  const c = 'h-5 w-5 md:h-7 md:w-7';
+  const stroke = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' };
+  const c = 'h-[22px] w-[22px] md:h-7 md:w-7';
   if (type === 'men')
-    return (<svg viewBox="0 0 24 24" className={c}><circle cx="9.5" cy="14.5" r="6.5" fill="currentColor" /><path d="M14 10l6.5-6.5M15 3.5h5.5V9" {...stroke} /></svg>);
+    return (<svg viewBox="0 0 24 24" className={c}><circle cx="9.5" cy="14.5" r="6" {...stroke} /><path d="M13.5 10.5l6-6M14.5 4.5h5v5" {...stroke} /></svg>);
   if (type === 'women')
-    return (<svg viewBox="0 0 24 24" className={c}><circle cx="12" cy="9" r="6.5" fill="currentColor" /><path d="M12 15.5V22M8.5 19h7" {...stroke} /></svg>);
+    return (<svg viewBox="0 0 24 24" className={c}><circle cx="12" cy="9" r="6" {...stroke} /><path d="M12 15v7M8.5 19h7" {...stroke} /></svg>);
   if (type === 'unisex')
-    return (<svg viewBox="0 0 24 24" className={c}><circle cx="11" cy="11" r="5.5" fill="currentColor" /><path d="M15 7l5-5M16 2h4v4M11 16.5V22M8 19.5h6" {...stroke} /></svg>);
-  return (<svg viewBox="0 0 24 24" className={c}><path d="M10 2.5h4v3.5h-4z" fill="currentColor" /><path d="M8.5 7h7l2 4v8.5A2.5 2.5 0 0115 22H9a2.5 2.5 0 01-2.5-2.5V11z" fill="currentColor" /></svg>);
+    return (<svg viewBox="0 0 24 24" className={c}><circle cx="11" cy="11" r="5.5" {...stroke} /><path d="M15 7l5-5M16 2h4v4M11 16.5V22M8 19.5h6" {...stroke} /></svg>);
+  return (<svg viewBox="0 0 24 24" className={c}><path d="M10 2.5h4v3.5h-4z" {...stroke} /><path d="M8.5 7h7l2 4v8.5A2.5 2.5 0 0115 22H9a2.5 2.5 0 01-2.5-2.5V11z" {...stroke} /></svg>);
 }
+
+const pickCategory = (filter) => window.dispatchEvent(new CustomEvent('rupur:category', { detail: filter }));
 
 function SafeImg({ src, alt, className = '', eager = false }) {
   const [ok, setOk] = useState(true);
-  if (!ok) return <div className={`${className} bg-[#3a2c26]`} role="img" aria-label={alt} />;
+  if (!ok) return <div className={`${className} bg-ink-soft`} role="img" aria-label={alt} />;
   return <img src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} onError={() => setOk(false)} className={className} />;
 }
 
+function Ornament({ className = '' }) {
+  return (
+    <span aria-hidden className={`flex items-center justify-center gap-3 ${className}`}>
+      <span className="h-px w-10 bg-gradient-to-r from-transparent to-gold/60" />
+      <svg viewBox="0 0 12 12" className="h-1.5 w-1.5 text-gold"><path d="M6 0l1.6 4.4L12 6 7.6 7.6 6 12 4.4 7.6 0 6l4.4-1.6z" fill="currentColor" /></svg>
+      <span className="h-px w-10 bg-gradient-to-l from-transparent to-gold/60" />
+    </span>
+  );
+}
+
 export default function Hero() {
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const touchX = useRef(null);
-  const total = SLIDES.length;
   const [chipsRef, chipsIn] = useReveal();
   const [cardsRef, cardsIn] = useReveal();
-  const cur = SLIDES[active];
+  const [trustRef, trustIn] = useReveal();
+  const videoRef = useRef(null);
+  const frameRef = useRef(null);
+  const textRef = useRef(null);
+  const [muted, setMuted] = useState(true);
 
   useEffect(() => {
-    if (paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const t = setTimeout(() => setActive((i) => (i + 1) % total), SLIDE_TIME);
-    return () => clearTimeout(t);
-  }, [active, paused, total]);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const frame = frameRef.current;
+      if (!frame) return;
+      const h = frame.offsetHeight || 1;
+      const p = Math.min(Math.max(window.scrollY / (h * 0.9), 0), 1);
+      const ease = 1 - Math.pow(1 - p, 2);
+      const mobile = window.innerWidth < 768;
+      frame.style.transform = `scale(${1 - ease * (mobile ? 0.06 : 0.1)})`;
+      frame.style.borderRadius = `${ease * (mobile ? 24 : 36)}px`;
+      if (videoRef.current) videoRef.current.style.transform = `scale(${1 + ease * 0.18}) translateY(${ease * 4}%)`;
+      if (textRef.current) {
+        textRef.current.style.transform = `translateY(${-ease * 90}px)`;
+        textRef.current.style.opacity = `${Math.max(1 - p * 1.6, 0)}`;
+      }
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
 
-  const go = (i) => setActive((i + total) % total);
-  const onTouchStart = (e) => { touchX.current = e.touches[0].clientX; setPaused(true); };
-  const onTouchEnd = (e) => {
-    if (touchX.current !== null) {
-      const diff = e.changedTouches[0].clientX - touchX.current;
-      if (Math.abs(diff) > 40) go(active + (diff < 0 ? 1 : -1));
-    }
-    touchX.current = null;
-    setPaused(false);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    const p = v.play();
+    if (p && p.catch) p.catch(() => {});
+  }, []);
+
+  const toggleSound = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+    if (!v.muted) v.play().catch(() => {});
   };
 
   return (
-    // pt-14 md:pt-20 = Navbar ki height
-    <section id="home" className="bg-[#120B08] pt-14 text-white md:pt-20" style={{ fontFamily: "'Jost', 'Inter', system-ui, sans-serif" }}>
-      {/* Offer strip (mobile) */}
-      <div className="overflow-hidden border-y border-[#D9A35B]/20 bg-[#1b110c] py-2.5 text-[13px] text-[#F3D59B] md:hidden">
-        <div className="marquee flex w-max">
-          {[0, 1].map((k) => (
-            <div key={k} className="flex shrink-0 items-center" aria-hidden={k === 1}>
-              {OFFERS.map((o) => (
-                <span key={o} className="flex items-center whitespace-nowrap px-4">
-                  {o}<span className="ml-8 text-[#D9A35B]">✦</span>
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
+    <section id="home" className="relative bg-ink pt-16 text-cream md:pt-20 overflow-hidden font-sans">
+      {/* Background Glow */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[700px]"
+        style={{ background: 'radial-gradient(55% 45% at 50% 0%, rgba(176,141,87,0.22), transparent 70%)' }} />
 
-      {/* ============ BANNER ============ */}
-      <div className="md:mx-auto md:max-w-[1500px] md:px-8 md:pt-4">
-        <div
-          className="banner-in relative aspect-[4/5] max-h-[560px] w-full overflow-hidden bg-[#3a2c26] md:aspect-[16/7] md:max-h-none md:rounded-[32px]"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-          aria-roledescription="carousel"
+      {/* ============ VIDEO ============ */}
+      <div
+        ref={frameRef}
+        className="banner-in grain relative h-[80svh] min-h-[500px] w-full origin-top overflow-hidden bg-ink will-change-transform md:h-[calc(100svh-80px)] md:min-h-[580px]"
+      >
+        <video
+          ref={videoRef}
+          src={VIDEO}
+          poster={POSTER}
+          autoPlay muted loop playsInline preload="auto"
+          aria-label="RUPUR perfume video"
+          className="absolute inset-0 h-full w-full object-cover will-change-transform"
+        />
+
+        {/* Cinematic overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-ink/5" />
+        <div className="absolute inset-0" style={{ boxShadow: 'inset 0 0 200px 40px rgba(0,0,0,0.6)' }} />
+
+        {/* Text block - Modern & Professional */}
+        <div ref={textRef} className="absolute inset-x-0 bottom-12 z-10 flex flex-col items-center px-6 text-center will-change-transform md:bottom-20">
+          
+          {/* Top Eyebrow with Lines */}
+          <div className="rise flex items-center justify-center gap-4" style={{ animationDelay: '150ms' }}>
+            <span className="h-px w-6 md:w-8 bg-gold/50" />
+            <span className="block text-[12px] md:text-[10px] font-semibold uppercase tracking-[0.7em] text-white">
+              Maison de Parfume
+            </span>
+            <span className="h-px w-6 md:w-8 bg-gold/50" />
+          </div>
+
+          {/* Premium Bold Typography */}
+          <span className="mt-5 block overflow-hidden">
+            <span
+              className="rise block text-[58px] leading-[0.9] tracking-[0.06em] md:text-[105px] text-gold-gradient font-semibold"
+              style={{ 
+                animationDelay: '250ms',
+                fontFamily: "'Playfair Display', serif"
+              }}
+            >
+              {HERO.title}
+            </span>
+          </span>
+
+          {/* Elegant Italic Tagline */}
+          <span className="block overflow-hidden mt-3">
+            <span 
+              className="rise block font-serif italic text-[20px] text-cream/90 md:text-[30px]" 
+              style={{ animationDelay: '400ms' }}
+            >
+              {HERO.tagline}
+            </span>
+          </span>
+
+          <div className="rise mt-6 md:mt-8" style={{ animationDelay: '480ms' }}>
+            <Ornament />
+          </div>
+
+          {/* Buttons */}
+          <div className="mt-8 flex w-full max-w-[400px] gap-3 md:mt-10">
+            {/* Primary Button */}
+            <a
+              href={HERO.primary.href}
+              onClick={() => pickCategory('All')}
+              className="pop btn-shine group relative grid h-[50px] md:h-[54px] flex-1 place-items-center overflow-hidden rounded-full text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] text-ink shadow-[0_14px_44px_-14px_#B08D57] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_54px_-16px_#B08D57] active:scale-[.97]"
+              style={{
+                animationDelay: '550ms',
+                background: 'linear-gradient(135deg, #E8D3A8 0%, #B08D57 100%)',
+              }}
+            >
+              <span className="relative z-10">{HERO.primary.label}</span>
+            </a>
+
+            {/* Secondary Button */}
+            <a
+              href={HERO.secondary.href}
+              className="pop glass grid h-[50px] md:h-[54px] flex-1 place-items-center rounded-full border border-white/20 text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.2em] text-cream transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:text-gold active:scale-[.97]"
+              style={{ animationDelay: '650ms' }}
+            >
+              {HERO.secondary.label}
+            </a>
+          </div>
+        </div>
+
+        {/* Sound toggle */}
+        <button
+          onClick={toggleSound}
+          aria-label={muted ? 'Turn sound on' : 'Turn sound off'}
+          className="glass absolute right-4 top-4 z-20 grid h-10 w-10 place-items-center rounded-full text-cream transition-all hover:border-gold/60 md:right-6 md:top-6"
         >
-          {SLIDES.map((s, i) => {
-            const on = i === active;
-            return (
-              <div key={i} aria-hidden={!on} className={`absolute inset-0 transition-opacity duration-1000 ${on ? 'z-10 opacity-100' : 'z-0 opacity-0'}`}>
-                <SafeImg
-                  src={s.img}
-                  alt={s.lines[0]}
-                  eager={i === 0}
-                  className={`h-full w-full object-cover transition-transform ease-out ${on ? 'scale-[1.08] duration-[7000ms]' : 'scale-100 duration-0'}`}
-                />
-                <div className="absolute inset-0 hidden bg-gradient-to-b from-black/35 via-transparent to-black/50 md:block" />
-
-                {on && (
-                  <div className="absolute right-14 top-[32%] hidden max-w-[460px] text-right text-white drop-shadow-[0_2px_10px_rgba(0,0,0,.55)] md:block">
-                    {s.lines.map((t, n) => (
-                      <span key={n} className="block overflow-hidden">
-                        <span className="rise block text-[34px] font-medium leading-snug" style={{ animationDelay: `${150 + n * 120}ms` }}>{t}</span>
-                      </span>
-                    ))}
-                    <span className="block overflow-hidden">
-                      <span className="rise block text-[34px] italic leading-snug text-[#FFE2B8]" style={{ animationDelay: `${150 + s.lines.length * 120}ms` }}>{s.italic}</span>
-                    </span>
-                  </div>
-                )}
-
-                {on && (
-                  <div className="absolute bottom-14 left-14 hidden w-[540px] grid-cols-2 gap-3 md:grid">
-                    <a href={s.primary.href} className="pop btn-shine relative grid min-h-[64px] place-items-center overflow-hidden rounded-2xl border-[3px] border-white px-3 text-center text-2xl font-medium text-white shadow-lg transition hover:-translate-y-0.5" style={{ backgroundColor: CTA, animationDelay: '420ms' }}>
-                      {s.primary.label}
-                    </a>
-                    <a href={s.secondary.href} className="pop grid min-h-[64px] place-items-center rounded-2xl border-[3px] border-white bg-[#1A1A1A] px-3 text-center text-2xl font-medium text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-black" style={{ animationDelay: '520ms' }}>
-                      {s.secondary.label}
-                    </a>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-
-          {/* Mobile: photo ka neeche wala hissa dark brown me ghul jata hai */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-28 bg-gradient-to-t from-[#120B08] via-[#120B08]/70 to-transparent md:hidden" />
-
-          {/* Desktop offer box */}
-          <div className="drop-in absolute inset-x-6 top-5 z-20 hidden overflow-hidden rounded-2xl bg-[#1A1A1A]/95 py-3 text-base text-white md:block">
-            <div className="marquee flex w-max">
-              {[0, 1].map((k) => (
-                <div key={k} className="flex shrink-0 items-center" aria-hidden={k === 1}>
-                  {OFFERS.map((o) => (
-                    <span key={o} className="flex items-center whitespace-nowrap px-5">
-                      {o}<span className="ml-10 text-[#D9A35B]">✦</span>
-                    </span>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Dots */}
-          <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-2 md:bottom-5">
-            {SLIDES.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => go(i)}
-                aria-label={`Slide ${i + 1}`}
-                className={`relative h-2 overflow-hidden rounded-full bg-white/40 transition-all duration-500 ${i === active ? 'w-10' : 'w-2'}`}
-              >
-                {i === active && (
-                  <span
-                    key={active}
-                    className="fill absolute inset-y-0 left-0 rounded-full bg-[#D9A35B]"
-                    style={{ animationDuration: `${SLIDE_TIME}ms`, animationPlayState: paused ? 'paused' : 'running' }}
-                  />
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* ============ MOBILE: text dark jagah pe ============ */}
-        <div key={active} className="fade-up px-6 pb-2 pt-5 text-center md:hidden">
-          <h1 className="font-serif text-[27px] leading-[1.2] text-white">
-            {cur.lines.join(' ')}{' '}
-            <span className="italic" style={{ color: GOLD }}>{cur.italic}</span>
-          </h1>
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <a
-              href={cur.primary.href}
-              className="btn-shine relative grid h-[54px] place-items-center overflow-hidden rounded-full text-[15px] font-semibold tracking-wide text-white shadow-[0_10px_30px_-10px_#E8562A] active:scale-[.97]"
-              style={{ backgroundColor: CTA }}
-            >
-              {cur.primary.label}
-            </a>
-            <a
-              href={cur.secondary.href}
-              className="grid h-[54px] place-items-center rounded-full border border-[#D9A35B]/60 px-2 text-[15px] font-medium text-[#F3D59B] transition active:scale-[.97] active:bg-[#D9A35B]/10"
-            >
-              {cur.secondary.label}
-            </a>
-          </div>
-        </div>
+          <svg viewBox="0 0 24 24" className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none" />
+            {muted ? <path d="M17 9l5 6M22 9l-5 6" /> : <path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12" />}
+          </svg>
+        </button>
       </div>
 
       {/* Trust row (mobile) */}
-      <div className="mx-5 mt-7 grid grid-cols-3 divide-x divide-white/10 rounded-2xl border border-white/10 bg-white/[0.03] py-4 md:hidden">
-        {TRUST.map((x) => (
-          <div key={x.t} className="flex flex-col items-center gap-1.5 px-1 text-center">
-            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke={GOLD} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={x.d} /></svg>
-            <span className="text-[13px] font-medium leading-none text-white">{x.t}</span>
-            <span className="text-[11px] leading-none text-white/50">{x.s}</span>
+      <div
+        ref={trustRef}
+        className="relative mx-5 mt-8 grid grid-cols-3 divide-x divide-gold/15 overflow-hidden rounded-2xl border border-gold/20 bg-gradient-to-b from-white/[0.04] to-transparent py-5 backdrop-blur md:hidden"
+      >
+        {TRUST.map((x, i) => (
+          <div
+            key={x.t}
+            className={`flex flex-col items-center gap-1.5 px-1 text-center transition-all duration-700 ease-luxe ${trustIn ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+            style={{ transitionDelay: trustIn ? `${i * 120}ms` : '0ms' }}
+          >
+            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d={x.d} className="text-gold" /></svg>
+            <span className="text-[12px] font-medium uppercase tracking-[0.12em] leading-none text-cream">{x.t}</span>
+            <span className="text-[10px] uppercase tracking-[0.15em] leading-none text-mist">{x.s}</span>
           </div>
         ))}
       </div>
 
-      {/* ============ SECOND SECTION: scroll pe khulta hai ============ */}
-      <div className="relative overflow-hidden pb-14 pt-12 md:pb-20 md:pt-16">
-        <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-[130%] -translate-x-1/2 rounded-full bg-[#D9A35B]/10 blur-[100px]" />
+      {/* ============ CATEGORY + COLLECTIONS ============ */}
+      <div className="relative overflow-hidden pb-20 pt-16 md:pb-28 md:pt-24">
+        <div aria-hidden className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[80%] -translate-x-1/2 rounded-full opacity-40 blur-[100px]"
+          style={{ background: 'radial-gradient(ellipse, rgba(176,141,87,0.22), transparent 70%)' }} />
 
-        <div ref={chipsRef} className="relative mx-auto max-w-[1500px]">
-          {/* Sunehri line beech se dono taraf khulti hai */}
-          <div className="mx-8 mb-8 flex items-center gap-3 md:mx-auto md:mb-10 md:max-w-xl">
-            <span className={`h-px flex-1 origin-right bg-gradient-to-l from-[#D9A35B] to-transparent transition-transform duration-[1200ms] ease-[cubic-bezier(.7,0,.2,1)] ${chipsIn ? 'scale-x-100' : 'scale-x-0'}`} />
-            <span className={`text-[#D9A35B] transition-all delay-500 duration-700 ${chipsIn ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-0 opacity-0'}`}>✦</span>
-            <span className={`h-px flex-1 origin-left bg-gradient-to-r from-[#D9A35B] to-transparent transition-transform duration-[1200ms] ease-[cubic-bezier(.7,0,.2,1)] ${chipsIn ? 'scale-x-100' : 'scale-x-0'}`} />
-          </div>
-
-          {/* Heading: ek-ek line mask se upar uthti hai */}
-          <h2 className="mb-8 px-5 text-center font-serif text-[34px] leading-[1.15] md:mb-12 md:text-6xl">
-            <span className="block overflow-hidden pb-1">
-              <span className={`block transition-transform duration-[1100ms] ease-[cubic-bezier(.2,.8,.2,1)] ${chipsIn ? 'translate-y-0' : 'translate-y-[125%]'}`} style={{ transitionDelay: '250ms' }}>Find your</span>
-            </span>
-            <span className="block overflow-hidden pb-1">
-              <span className={`block italic text-[#D9A35B] transition-transform duration-[1100ms] ease-[cubic-bezier(.2,.8,.2,1)] ${chipsIn ? 'translate-y-0' : 'translate-y-[125%]'}`} style={{ transitionDelay: '400ms' }}>signature scent</span>
+        <div ref={chipsRef} className="relative mx-auto max-w-[1100px] px-5 md:px-8">
+          <span className={`mx-auto mb-4 block text-center eyebrow transition-all delay-100 duration-700 ${chipsIn ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}`}>
+            — Curated for you —
+          </span>
+          <h2 className="overflow-hidden text-center text-[32px] leading-[1.05] tracking-[0.02em] text-cream md:text-[48px]">
+            <span className={`block pb-2 transition-transform duration-[900ms] ease-luxe ${chipsIn ? 'translate-y-0' : 'translate-y-full'}`}>
+              Shop by <span className="italic font-light text-gold">category</span>
             </span>
           </h2>
+          <p className={`mt-3 text-center text-[12px] uppercase tracking-[0.3em] text-mist transition-all delay-200 duration-700 md:text-[13px] ${chipsIn ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}`}>
+            Pick what suits you
+          </p>
+          <div className={`mt-6 transition-all delay-300 duration-1000 ${chipsIn ? 'scale-100 opacity-100' : 'scale-x-0 opacity-0'}`}>
+            <Ornament />
+          </div>
 
-          {/* Categories: ek-ek karke pop hote hain */}
-          <div className="flex gap-3 overflow-x-auto px-5 pb-1 md:justify-center md:gap-4 md:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="mt-10 grid grid-cols-2 gap-3 md:mt-14 md:grid-cols-4 md:gap-4">
             {CATEGORIES.map((c, i) => (
               <a
                 key={c.label}
-                href={c.href}
-                className={`group flex h-12 shrink-0 items-center gap-2.5 rounded-full border border-[#D9A35B]/40 bg-white/[0.04] px-6 text-white transition-all duration-700 ease-[cubic-bezier(.3,1.3,.5,1)] active:scale-95 active:bg-[#D9A35B] active:text-black md:h-[68px] md:px-8 md:hover:-translate-y-1 md:hover:border-[#D9A35B] md:hover:bg-[#D9A35B] md:hover:text-black ${
-                  chipsIn ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-8 scale-90 opacity-0'
+                href="#shop"
+                onClick={() => pickCategory(c.filter)}
+                className={`group relative flex items-center gap-3 overflow-hidden rounded-2xl border border-ink-line bg-gradient-to-b from-white/[0.04] to-transparent p-4 transition-all ease-luxe hover:border-gold/50 hover:from-white/[0.08] active:scale-[.98] md:flex-col md:gap-5 md:p-8 ${
+                  chipsIn ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-10 scale-95 opacity-0'
                 }`}
-                style={{ transitionDelay: chipsIn ? `${600 + i * 90}ms` : '0ms' }}
+                style={{ transitionDelay: chipsIn ? `${350 + i * 110}ms` : '0ms', transitionDuration: '800ms' }}
               >
-                <span className="text-[#D9A35B] transition-colors group-hover:text-black group-active:text-black"><GenderIcon type={c.icon} /></span>
-                <span className="text-base font-medium md:text-2xl">{c.label}</span>
+                <span aria-hidden className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-gold/0 transition-all duration-500 group-hover:ring-gold/40" />
+                <span className="relative grid h-12 w-12 shrink-0 place-items-center rounded-full bg-gold/10 text-gold ring-1 ring-inset ring-gold/20 transition-all duration-500 group-hover:bg-gold group-hover:text-ink group-hover:ring-transparent md:h-[68px] md:w-[68px]">
+                  <GenderIcon type={c.icon} />
+                </span>
+                <span className="flex flex-col items-start gap-1 md:items-center">
+                  <span className="text-[15px] font-medium tracking-[0.08em] text-cream transition-colors group-hover:text-gold-light md:text-[17px]">{c.label}</span>
+                  <span className="text-[9px] uppercase tracking-[0.3em] text-mist md:text-[10px]">Explore</span>
+                </span>
               </a>
             ))}
           </div>
         </div>
 
-        {/* Collections: card beech se parde ki tarah khulta hai */}
-        <div className="relative mx-auto mt-12 max-w-[1500px] md:mt-16">
-          <div className="mb-4 flex items-end justify-between px-5 md:hidden">
-            <h3 className="font-serif text-2xl">Our <span className="italic text-[#D9A35B]">collections</span></h3>
-            <a href="#shop" className="pb-1 text-sm text-[#D9A35B]">View all</a>
+        {/* Collections */}
+        <div className="relative mx-auto mt-16 max-w-[1500px] md:mt-24">
+          <div className="mb-6 flex items-end justify-between px-5 md:hidden">
+            <h3 className="text-2xl text-cream">Our <span className="italic text-gold">collections</span></h3>
+            <a href="#shop" onClick={() => pickCategory('All')} className="pb-1 text-xs uppercase tracking-[0.2em] text-gold">View all</a>
           </div>
           <div
             ref={cardsRef}
@@ -314,10 +308,11 @@ export default function Hero() {
             {COLLECTIONS.map((c, i) => (
               <a
                 key={c.title}
-                href={c.href}
-                className="card group relative block aspect-[4/5] w-[78%] shrink-0 snap-center overflow-hidden rounded-[24px] bg-[#3a2c26] transition-[clip-path] duration-[1300ms] ease-[cubic-bezier(.7,0,.2,1)] md:aspect-[4/3.3] md:w-auto"
+                href="#shop"
+                onClick={() => pickCategory(c.filter)}
+                className="card group relative block aspect-[4/5] w-[80%] shrink-0 snap-center overflow-hidden rounded-[26px] bg-ink-soft transition-[clip-path,transform] duration-[1300ms] ease-luxe hover:shadow-[0_40px_80px_-40px_rgba(0,0,0,0.95)] md:aspect-[4/3.3] md:w-auto"
                 style={{
-                  clipPath: cardsIn ? 'inset(0% 0% 0% 0% round 24px)' : 'inset(50% 0% 50% 0% round 24px)',
+                  clipPath: cardsIn ? 'inset(0% 0% 0% 0% round 26px)' : 'inset(50% 0% 50% 0% round 26px)',
                   transitionDelay: cardsIn ? `${i * 180}ms` : '0ms',
                 }}
               >
@@ -326,17 +321,23 @@ export default function Hero() {
                   alt={c.title}
                   className={`h-full w-full object-cover transition-transform duration-[1800ms] ease-out group-hover:scale-110 ${cardsIn ? 'scale-100' : 'scale-[1.4]'}`}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
+                <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[26px] ring-1 ring-inset ring-white/10 transition-all duration-500 group-hover:ring-gold/50" />
+                
+                <span className="absolute left-5 top-5 z-10 text-[10px] uppercase tracking-[0.35em] text-white/50">
+                  0{i + 1}
+                </span>
+                
                 <div
-                  className={`absolute inset-x-5 bottom-5 flex items-end justify-between gap-3 transition-all duration-1000 ease-[cubic-bezier(.2,.8,.2,1)] ${cardsIn ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
+                  className={`absolute inset-x-5 bottom-5 flex items-end justify-between gap-3 transition-all duration-1000 ease-luxe ${cardsIn ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
                   style={{ transitionDelay: cardsIn ? `${700 + i * 180}ms` : '0ms' }}
                 >
                   <div>
-                    <h3 className="font-serif text-[26px] leading-none text-white md:text-3xl">{c.title}</h3>
-                    <p className="mt-2 text-sm text-[#F3D59B]">{c.sub}</p>
+                    <h3 className="text-[24px] leading-none tracking-[0.01em] text-cream md:text-[28px]">{c.title}</h3>
+                    <p className="mt-2 text-[11px] uppercase tracking-[0.2em] text-gold-pale/85">{c.sub}</p>
                   </div>
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#D9A35B] text-black transition-transform duration-500 group-hover:translate-x-1">
-                    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gold text-ink shadow-[0_10px_30px_-8px_rgba(176,141,87,0.6)] transition-transform duration-500 group-hover:translate-x-1">
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
                   </span>
                 </div>
               </a>
@@ -346,31 +347,20 @@ export default function Hero() {
       </div>
 
       <style>{`
-        .banner-in { animation: bannerIn 1s cubic-bezier(.2,.8,.2,1) both; }
-        @keyframes bannerIn { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: none; } }
-        .drop-in { animation: dropIn .8s .3s cubic-bezier(.2,.8,.2,1) both; }
-        @keyframes dropIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: none; } }
-        .rise { animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
+        .banner-in { animation: bannerIn 1s cubic-bezier(.19,1,.22,1) both; }
+        @keyframes bannerIn { from { opacity: 0; } to { opacity: 1; } }
+        .rise { animation: rise .9s cubic-bezier(.19,1,.22,1) both; }
         @keyframes rise { from { transform: translateY(110%); } to { transform: none; } }
         .pop { animation: pop .7s cubic-bezier(.3,1.4,.5,1) both; }
         @keyframes pop { from { opacity: 0; transform: translateY(24px) scale(.94); } to { opacity: 1; transform: none; } }
-        .fade-up { animation: fadeUp .7s cubic-bezier(.2,.8,.2,1) both; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-        .marquee { animation: marquee 22s linear infinite; }
-        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .fill { animation-name: fill; animation-timing-function: linear; animation-fill-mode: both; }
-        @keyframes fill { from { width: 0%; } to { width: 100%; } }
         .btn-shine::after {
           content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
-          background: linear-gradient(100deg, transparent, rgba(255,255,255,.5), transparent);
-          transform: skewX(-20deg); animation: shine 3.2s 1s ease-in-out infinite;
+          background: linear-gradient(100deg, transparent, rgba(255,255,255,.4), transparent);
+          transform: skewX(-20deg); animation: shine 3.4s 1.2s ease-in-out infinite;
         }
-        @keyframes shine { 0%, 60% { left: -60%; } 100% { left: 130%; } }
-        @media (prefers-reduced-motion: reduce) {
-          .banner-in, .drop-in, .rise, .pop, .fade-up, .marquee, .btn-shine::after { animation: none !important; }
-          .card { clip-path: none !important; }
-        }
+        @keyframes shine { 0%, 65% { left: -60%; } 100% { left: 130%; } }
       `}</style>
     </section>
   );
 }
+

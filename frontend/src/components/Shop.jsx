@@ -7,13 +7,25 @@ gsap.registerPlugin(ScrollTrigger);
 
 const IMG_BASE = 'https://idyllic-tarsier-20717f.netlify.app';
 
+// gender: 'Men' | 'Women' | 'Unisex'    type: 'Perfume' | 'Attar'
+// Naya attar aaye toh type: 'Attar' likho, woh Attar filter me aa jayega
 const PERFUMES = [
-  { name: 'Romantic Dance', desc: 'Candle-lit, rose-warm evenings', size: '30 ML', img: '/img/romantic.webp', accent: '#7A1F2B' },
-  { name: 'Dhaval', desc: 'Clean, woody, daily office wear', size: '30 ML', img: '/img/dhaval.webp', accent: '#3A4250' },
-  { name: 'Giraft', desc: 'Dark, bold and unchained', size: '50 ML', img: '/img/giraft.webp', accent: '#2A2622' },
-  { name: 'Ira', desc: 'A garden of soft florals', size: '30 ML', img: '/img/ira.webp', accent: '#B4586C' },
-  { name: 'Sea Faze', desc: 'Salt air and a cool breeze', size: '30 ML', img: '/img/seafaze.webp', accent: '#1F5FA8' },
+  { name: 'Romantic Dance', desc: 'Candle-lit, rose-warm evenings', size: '30 ML', img: '/img/romantic.webp', accent: '#7A1F2B', gender: 'Women', type: 'Perfume', price: 799, mrp: 999, soldOut: false },
+  { name: 'Dhaval', desc: 'Clean, woody, daily office wear', size: '30 ML', img: '/img/dhaval.webp', accent: '#3A4250', gender: 'Men', type: 'Perfume', price: 699, mrp: 899, soldOut: false },
+  { name: 'Giraft', desc: 'Dark, bold and unchained', size: '50 ML', img: '/img/giraft.webp', accent: '#2A2622', gender: 'Men', type: 'Perfume', price: 999, mrp: 1299, soldOut: true },
+  { name: 'Ira', desc: 'A garden of soft florals', size: '30 ML', img: '/img/ira.webp', accent: '#B4586C', gender: 'Women', type: 'Perfume', price: 749, mrp: 999, soldOut: false },
+  { name: 'Sea Faze', desc: 'Salt air and a cool breeze', size: '30 ML', img: '/img/seafaze.webp', accent: '#1F5FA8', gender: 'Unisex', type: 'Perfume', price: 799, mrp: 999, soldOut: false },
 ];
+
+const FILTERS = ['All', 'Men', 'Women', 'Unisex', 'Attar'];
+const match = (p, f) => (f === 'All' ? true : f === 'Attar' ? p.type === 'Attar' : p.gender === f);
+const HEADINGS = {
+  All: ['Five', 'Signatures'],
+  Men: ['For', 'him'],
+  Women: ['For', 'her'],
+  Unisex: ['For', 'everyone'],
+  Attar: ['Roll-on', 'attars'],
+};
 
 const WHATSAPP = '919713620850';
 const GOLD = '#B08D57';
@@ -79,7 +91,13 @@ function Card({ p, index, onOpen, isLarge }) {
         <span className="absolute left-4 top-4 rounded-full border border-white/60 bg-white/85 px-4 py-1.5 text-[10px] font-medium tracking-[0.15em] text-[#1A1A1A]/70 backdrop-blur-md">
           {p.size.replace(' ', '')} · EDP
         </span>
-        <span className="absolute right-4 top-4 font-serif text-sm text-white/90 drop-shadow">0{index + 1}</span>
+        {p.soldOut ? (
+          <span className="absolute right-4 top-4 rounded-full bg-[#1A1A1A] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-white">Sold out</span>
+        ) : (
+          <span className="absolute right-4 top-4 rounded-full bg-[#E8562A] px-3 py-1.5 text-[10px] font-semibold tracking-[0.1em] text-white">
+            {Math.round(((p.mrp - p.price) / p.mrp) * 100)}% OFF
+          </span>
+        )}
         <span className="absolute inset-x-4 bottom-4 flex translate-y-[140%] items-center justify-between rounded-full bg-[#1A1A1A]/85 px-5 py-3 text-[11px] uppercase tracking-[0.25em] text-white backdrop-blur-md transition-transform duration-500 group-hover:translate-y-0">
           Discover
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17 17 7M9 7h8v8" /></svg>
@@ -92,19 +110,23 @@ function Card({ p, index, onOpen, isLarge }) {
             <span className="h-2 w-2 rounded-full transition-transform duration-500 group-hover:scale-150" style={{ backgroundColor: p.accent }} />
             <h3 className={`font-serif text-[#1A1A1A] ${isLarge ? 'text-2xl' : 'text-xl'}`}>{p.name}</h3>
           </div>
-          <span className="rounded-full border border-[#1A1A1A]/10 px-3 py-1 text-[10px] uppercase tracking-wider text-[#1A1A1A]/50">{p.size}</span>
+          <span className="rounded-full border border-[#1A1A1A]/10 px-3 py-1 text-[10px] uppercase tracking-wider text-[#1A1A1A]/50">{p.gender}</span>
         </div>
         <p className="ml-5 text-sm text-[#1A1A1A]/55">{p.desc}</p>
+        <p className="ml-5 mt-3">
+          <span className="text-lg font-semibold text-[#1A1A1A]">₹{p.price}</span>
+          <span className="ml-2 text-sm text-[#1A1A1A]/40 line-through">₹{p.mrp}</span>
+        </p>
       </div>
     </button>
   );
 }
 
 /* ======================= Full View (Modal) ======================= */
-function FullView({ index, originEl, onClose, onChange }) {
+function FullView({ items, index, originEl, onClose, onChange }) {
   const wrapRef = useRef(null);
   const panelRef = useRef(null);
-  const p = PERFUMES[index];
+  const p = items[index];
   const closing = useRef(false);
   const firstRun = useRef(true);
 
@@ -153,7 +175,11 @@ function FullView({ index, originEl, onClose, onChange }) {
     return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
   }, [close, onChange]);
 
-  const waText = encodeURIComponent(`Hi Rupur, I'd like to order ${p.name} (${p.size}).`);
+  const waText = encodeURIComponent(
+    p.soldOut
+      ? `Hi Rupur, please tell me when ${p.name} (${p.size}) is back in stock.`
+      : `Hi Rupur, I'd like to order ${p.name} (${p.size}) - ₹${p.price}.\n\nName:\nAddress:\nPincode:`
+  );
 
   return createPortal(
     <div ref={wrapRef} className="fixed inset-0 z-[200]" role="dialog" aria-modal="true" data-lenis-prevent>
@@ -169,7 +195,7 @@ function FullView({ index, originEl, onClose, onChange }) {
             <div className="flex items-center justify-between">
               <span className="fv-in flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]" style={{ color: GOLD }}>
                 <span className="h-px w-8" style={{ backgroundColor: GOLD }} />
-                The Collection · {index + 1}/{PERFUMES.length}
+                {p.gender} · {index + 1}/{items.length}
               </span>
               <button onClick={close} className="fv-in group flex h-12 w-12 items-center justify-center rounded-full border border-[#1A1A1A]/15 text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-colors duration-500">
                 <svg viewBox="0 0 24 24" className="h-4 w-4 group-hover:rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M6 6l12 12M18 6 6 18" /></svg>
@@ -180,9 +206,15 @@ function FullView({ index, originEl, onClose, onChange }) {
               <h2 className="fv-swap mt-5 font-serif text-[clamp(3rem,7vw,6.5rem)] leading-[0.95] text-[#1A1A1A]">{p.name}</h2>
               <p className="fv-swap mt-6 max-w-md font-serif text-2xl italic" style={{ color: p.accent }}>{p.desc}.</p>
               <p className="fv-swap mt-6 max-w-md text-[15px] leading-relaxed text-[#1A1A1A]/65">Slow-steeped with botanicals, traditional attars and aged sandalwood oil — built to evolve on pulse points.</p>
+              <p className="fv-swap mt-6 flex items-baseline gap-3">
+                <span className="text-4xl font-semibold text-[#1A1A1A]">₹{p.price}</span>
+                <span className="text-lg text-[#1A1A1A]/40 line-through">₹{p.mrp}</span>
+                {!p.soldOut && <span className="rounded-full bg-[#E8562A] px-3 py-1 text-sm font-semibold text-white">{Math.round(((p.mrp - p.price) / p.mrp) * 100)}% off</span>}
+              </p>
+              <p className="fv-swap mt-2 text-sm text-[#1A1A1A]/50">Free shipping above ₹999 · COD available</p>
               <div className="fv-swap mt-10 flex flex-wrap gap-4">
                 <a href={`https://wa.me/${WHATSAPP}?text=${waText}`} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-4 rounded-full bg-[#1A1A1A] py-1.5 pl-7 pr-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-white hover:bg-[#B08D57] transition-colors duration-500">
-                  Order on WhatsApp
+                  {p.soldOut ? 'Notify me on WhatsApp' : 'Order on WhatsApp'}
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#1A1A1A]"><svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
                 </a>
               </div>
@@ -205,6 +237,20 @@ function CREAM_FOR(hex) {
 export default function Shop() {
   const sectionRef = useRef(null);
   const [open, setOpen] = useState(null);
+  const [filter, setFilter] = useState('All');
+  const [changed, setChanged] = useState(false); // pehli baar filter badla?
+  const list = PERFUMES.filter((p) => match(p, filter));
+
+  // Home page ke Men / Women / Unisex / Attar buttons yahan ka filter badalte hain
+  useEffect(() => {
+    const onCat = (e) => {
+      if (FILTERS.includes(e.detail)) { setFilter(e.detail); setChanged(true); setOpen(null); }
+    };
+    window.addEventListener('rupur:category', onCat);
+    return () => window.removeEventListener('rupur:category', onCat);
+  }, []);
+
+  const pick = (f) => { setFilter(f); setChanged(true); setOpen(null); };
 
   useLayoutEffect(() => {
     if (reduceMotion()) return;
@@ -223,7 +269,7 @@ export default function Shop() {
   }, []);
 
   const openCard = (index, el) => setOpen({ index, el });
-  const change = useCallback((d) => setOpen((o) => o && { ...o, index: (o.index + d + PERFUMES.length) % PERFUMES.length }), []);
+  const change = useCallback((d) => setOpen((o) => o && { ...o, index: (o.index + d + list.length) % list.length }), [list.length]);
 
   return (
     <section id="shop" ref={sectionRef} className="relative z-20 min-h-screen overflow-hidden bg-[#F8F5EE] py-24 shadow-[0_-30px_80px_-20px_rgba(0,0,0,0.5)] lg:py-32">
@@ -240,10 +286,10 @@ export default function Shop() {
             </div>
             <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl" style={{ color: INK }}>
               <span className="inline-block overflow-hidden pb-[0.08em] align-bottom">
-                <span className="shop-word inline-block">Five</span>
+                <span className="shop-word inline-block">{HEADINGS[filter][0]}</span>
               </span>{' '}
               <span className="inline-block overflow-hidden pb-[0.08em] align-bottom">
-                <span className="shop-word inline-block italic" style={{ color: GOLD }}>Signatures</span>
+                <span className="shop-word inline-block italic" style={{ color: GOLD }}>{HEADINGS[filter][1]}</span>
               </span>
             </h2>
           </div>
@@ -252,31 +298,67 @@ export default function Shop() {
           </p>
         </div>
 
-        {/* Grid: 2 Top, 3 Bottom */}
-        <div className="grid grid-cols-6 gap-6 lg:gap-8">
-          
-          {/* Top Row: 2 Items (col-span-3 each) */}
-          {PERFUMES.slice(0, 2).map((p, i) => (
-            <div key={p.name} className="shop-card-wrap col-span-6 md:col-span-3">
-              <Card p={p} index={i} onOpen={openCard} isLarge={true} />
-            </div>
+        {/* Filter tabs */}
+        <div role="tablist" aria-label="Filter perfumes" className="-mx-6 mb-10 flex gap-2 overflow-x-auto px-6 lg:mx-0 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {FILTERS.map((f) => (
+            <button
+              key={f}
+              type="button"
+              role="tab"
+              aria-selected={f === filter}
+              onClick={() => pick(f)}
+              className={`shrink-0 rounded-full px-6 py-2.5 text-sm transition-all duration-300 ${
+                f === filter
+                  ? 'bg-[#1A1A1A] font-semibold text-white shadow-[0_10px_25px_-10px_rgba(0,0,0,.5)]'
+                  : 'border border-[#1A1A1A]/15 text-[#1A1A1A]/70 hover:border-[#B08D57] hover:text-[#1A1A1A]'
+              }`}
+            >
+              {f}
+            </button>
           ))}
-
-          {/* Bottom Row: 3 Items (col-span-2 each) */}
-          {PERFUMES.slice(2, 5).map((p, i) => (
-            <div key={p.name} className="shop-card-wrap col-span-6 md:col-span-2">
-              <Card p={p} index={i + 2} onOpen={openCard} isLarge={false} />
-            </div>
-          ))}
-
         </div>
+
+        {/* Grid: "All" me 2 upar + 3 neeche, baaki filters me simple grid */}
+        <div key={filter} className="grid grid-cols-6 gap-6 lg:gap-8">
+          {list.map((p, i) => {
+            const big = filter === 'All' ? i < 2 : list.length <= 2;
+            return (
+              <div
+                key={p.name}
+                className={`shop-card-wrap col-span-6 ${changed ? 'filter-in' : ''} ${big ? 'md:col-span-3' : 'md:col-span-2'}`}
+                style={changed ? { animationDelay: `${i * 110}ms` } : undefined}
+              >
+                <Card p={p} index={i} onOpen={openCard} isLarge={big} />
+              </div>
+            );
+          })}
+        </div>
+
+        {list.length === 0 && (
+          <div className="filter-in mx-auto max-w-md rounded-3xl border border-[#1A1A1A]/10 bg-white p-10 text-center">
+            <p className="font-serif text-3xl text-[#1A1A1A]">Coming soon</p>
+            <p className="mt-3 text-sm text-[#1A1A1A]/60">Our roll-on attars are on their way. Ask us on WhatsApp to know first.</p>
+            <a
+              href={`https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Hi Rupur, I want to know about your roll-on attars.')}`}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 inline-block rounded-full bg-[#1A1A1A] px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#B08D57]"
+            >
+              Ask on WhatsApp
+            </a>
+          </div>
+        )}
 
       </div>
 
       {open && (
-        <FullView index={open.index} originEl={open.el} onClose={() => setOpen(null)} onChange={change} />
+        <FullView items={list} index={open.index} originEl={open.el} onClose={() => setOpen(null)} onChange={change} />
       )}
+      <style>{`
+        .filter-in { animation: filterIn .7s cubic-bezier(.2,.8,.2,1) both; }
+        @keyframes filterIn { from { opacity: 0; transform: translateY(30px) scale(.97); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .filter-in { animation: none; } }
+      `}</style>
     </section>
   );
 }
-

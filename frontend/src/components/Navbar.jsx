@@ -8,8 +8,6 @@ const LINKS = [
   { label: 'Contact', href: '#contact' },
 ];
 
-// Height: mobile 56px (h-14), desktop 80px (md:h-20)
-// Hero me pt-14 md:pt-20 isi wajah se hai
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -33,7 +31,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Menu khula ho toh page scroll band
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -42,36 +39,51 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`nav-in fixed inset-x-0 top-0 z-[200] transition-all duration-500 ease-[cubic-bezier(.2,.8,.2,1)]
+        className={`nav-in fixed inset-x-0 top-0 z-[200] transition-all duration-500 ease-luxe
           ${hidden && !open ? '-translate-y-full' : 'translate-y-0'}
-          ${scrolled || open ? 'bg-[#120B08]/95 backdrop-blur-xl' : 'bg-[#120B08]'}`}
+          ${scrolled || open
+            ? 'bg-ink/90 backdrop-blur-xl shadow-[0_1px_0_0_rgba(212,178,122,0.15),0_20px_40px_-30px_rgba(0,0,0,0.9)]'
+            : 'bg-ink'}`}
       >
-        <div className="mx-auto grid h-14 max-w-[1500px] grid-cols-[48px_1fr_48px] items-center px-2 md:h-20 md:px-8 lg:grid-cols-[auto_1fr_auto]">
-          {/* Mobile: menu button (left) */}
+        <div className="mx-auto grid h-16 max-w-[1500px] grid-cols-[48px_1fr_auto] items-center px-4 md:h-20 md:px-8 lg:grid-cols-[220px_1fr_auto] lg:gap-8">
+          
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setOpen((o) => !o)}
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
-            className="relative h-12 w-12 lg:hidden"
+            className="relative z-10 h-12 w-12 lg:hidden flex flex-col justify-center items-start pl-2 group"
           >
-            <span className={`absolute left-3 h-[2px] w-6 rounded bg-white transition-all duration-300 ${open ? 'top-[23px] rotate-45' : 'top-[17px]'}`} />
-            <span className={`absolute left-3 top-[23px] h-[2px] w-6 rounded bg-white transition-all duration-300 ${open ? 'opacity-0' : 'opacity-100'}`} />
-            <span className={`absolute left-3 h-[2px] w-6 rounded bg-white transition-all duration-300 ${open ? 'top-[23px] -rotate-45' : 'top-[29px]'}`} />
+            <span className={`h-[1.5px] bg-cream transition-all duration-300 ${open ? 'w-6 translate-y-[6px] rotate-45' : 'w-6 mb-1.5 group-hover:w-4'}`} />
+            <span className={`h-[1.5px] bg-cream transition-all duration-300 ${open ? 'w-6 opacity-0' : 'w-5 mb-1.5 group-hover:w-6'}`} />
+            <span className={`h-[1.5px] bg-cream transition-all duration-300 ${open ? 'w-6 -translate-y-[6px] -rotate-45' : 'w-4 group-hover:w-6'}`} />
           </button>
 
-          {/* Logo: mobile me bilkul beech me, tagline sirf desktop pe */}
-          <a href="#home" onClick={() => setOpen(false)} className="justify-self-center text-center leading-none lg:justify-self-start">
-            <span className="block font-serif text-[22px] tracking-[0.2em] text-white md:text-[30px]">RUPUR</span>
-            <span className="mt-1 hidden text-[10px] tracking-[0.35em] text-[#D9A35B] md:block">FRAGRANCE YOU FEEL</span>
-          </a>
+          {/* Logo Container */}
+          <div className="relative flex items-center justify-center lg:justify-start h-full w-full">
+            <a
+              href="#home"
+              onClick={() => setOpen(false)}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 lg:left-0 lg:translate-x-0 flex items-center group z-50"
+            >
+              <img 
+                src="/rupur-logo.png" 
+                alt="RUPUR Logo" 
+                className="h-8 md:h-10 w-auto object-contain transition-transform duration-300 origin-center lg:origin-left scale-[2.5] md:scale-[3] lg:scale-[3.5] group-hover:scale-[3.6] lg:group-hover:scale-[3.7]" 
+                style={{ mixBlendMode: 'screen', filter: 'invert(1)' }} 
+              />
+            </a>
+          </div>
 
-          {/* Desktop links */}
-          <ul className="hidden items-center justify-center gap-9 lg:flex">
+          {/* Desktop Links */}
+          <ul className="hidden items-center justify-center gap-8 lg:flex xl:gap-10">
             {LINKS.map((l) => (
               <li key={l.href}>
                 <a
                   href={l.href}
-                  className={`nav-link relative py-2 text-[15px] transition-colors duration-300 ${active === l.href ? 'text-white' : 'text-white/65 hover:text-white'}`}
+                  className={`nav-link relative py-2 text-[11px] font-medium uppercase tracking-[0.25em] transition-colors duration-300 ${
+                    active === l.href ? 'text-gold-light' : 'text-mist hover:text-cream'
+                  }`}
                   data-active={active === l.href}
                 >
                   {l.label}
@@ -80,19 +92,26 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* Right: cart (mobile), Shop Now + cart (desktop) */}
-          <div className="flex items-center justify-self-end gap-2">
+          {/* Right Actions */}
+          <div className="flex items-center justify-self-end gap-3 md:gap-6 z-10">
             <a
               href="#shop"
-              className="btn-shine relative hidden overflow-hidden rounded-full bg-[#E8562A] px-6 py-2.5 text-sm font-semibold text-white transition hover:scale-[1.03] md:inline-block"
+              className="btn-shine relative hidden overflow-hidden rounded-full px-6 py-2.5 text-[10px] xl:text-[11px] font-semibold uppercase tracking-[0.2em] text-ink transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_34px_-12px_#D4B27A] md:inline-block"
+              style={{ background: 'linear-gradient(135deg, #E8D3A8 0%, #B08D57 100%)' }}
             >
-              Shop Now
+              <span className="relative z-10">Shop Now</span>
             </a>
-            <a href="#shop" aria-label="Cart" className="grid h-12 w-12 place-items-center rounded-full text-white transition active:bg-white/10 lg:hover:bg-white/10">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="h-6 w-6">
+
+            <a
+              href="#shop"
+              aria-label="Cart"
+              className="group relative grid h-10 w-10 place-items-center rounded-full text-mist transition-all duration-300 hover:text-gold-light"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="h-5 w-5">
                 <path d="M5 8h14l-1.2 11.2a2 2 0 01-2 1.8H8.2a2 2 0 01-2-1.8L5 8z" strokeLinejoin="round" />
                 <path d="M9 8V6.5a3 3 0 016 0V8" />
               </svg>
+              <span className="absolute right-[8px] top-[8px] h-1.5 w-1.5 rounded-full bg-gold shadow-[0_0_8px_#D4B27A]" />
             </a>
           </div>
         </div>
@@ -100,65 +119,90 @@ export default function Navbar() {
         <ScrollProgress />
       </header>
 
-      {/* Mobile menu: header ke neeche se shuru, upar se overlap nahi */}
+      {/* ============ ULTRA PREMIUM MOBILE DRAWER ============ */}
       <div
-        className={`fixed inset-x-0 bottom-0 top-14 z-[190] bg-[#120B08] transition-opacity duration-300 lg:hidden ${
-          open ? 'opacity-100' : 'pointer-events-none opacity-0'
+        className={`fixed inset-x-0 bottom-0 top-16 z-[190] bg-[#0A0604] transition-all duration-500 ease-luxe lg:hidden ${
+          open ? 'opacity-100 translate-y-0' : 'pointer-events-none opacity-0 -translate-y-4'
         }`}
       >
-        <div className="flex h-full flex-col px-6 pb-8 pt-4">
-          <ul className="flex-1">
+        {/* Subtle gold ambient glow */}
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[400px]"
+          style={{ background: 'radial-gradient(50% 100% at 50% 0%, rgba(212,178,122,0.12), transparent 70%)' }} />
+
+        <div className="relative flex h-full flex-col px-6 pb-8 pt-6">
+          
+          {/* Menu Items */}
+          <ul className="flex-1 flex flex-col gap-1 mt-4">
             {LINKS.map((l, i) => (
-              <li key={l.href} className="border-b border-white/10">
+              <li key={l.href} className="overflow-hidden border-b border-white/[0.04]">
                 <a
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className={`flex items-center justify-between py-5 font-serif text-[28px] text-white transition-all duration-500 ease-[cubic-bezier(.2,.8,.2,1)] ${
-                    open ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'
+                  className={`group flex items-baseline gap-4 py-5 transition-all duration-500 ease-luxe ${
+                    open ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
                   }`}
-                  style={{ transitionDelay: open ? `${80 + i * 60}ms` : '0ms' }}
+                  style={{ transitionDelay: open ? `${100 + i * 50}ms` : '0ms' }}
                 >
-                  {l.label}
-                  <svg viewBox="0 0 24 24" className="h-5 w-5 text-[#D9A35B]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg>
+                  <span className="text-[10px] font-medium tracking-[0.2em] text-gold/60">
+                    0{i + 1}
+                  </span>
+                  <span className="font-serif text-[28px] leading-none text-cream transition-colors group-hover:text-gold-light">
+                    {l.label}
+                  </span>
                 </a>
               </li>
             ))}
           </ul>
 
-          <a
-            href="#shop"
-            onClick={() => setOpen(false)}
-            className="grid h-14 place-items-center rounded-2xl bg-[#E8562A] text-lg font-semibold text-white active:scale-[.98]"
+          {/* Bottom Section (CTA & Contact) */}
+          <div 
+            className={`mt-auto pt-6 transition-all duration-500 ease-luxe ${open ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
+            style={{ transitionDelay: open ? '400ms' : '0ms' }}
           >
-            Shop Now
-          </a>
-          <p className="mt-5 text-center text-sm leading-relaxed text-[#D9A35B]">
-            +91 79872 66411<br />rupurperfumes@gmail.com
-          </p>
+            {/* Shop Now Button */}
+            <a
+              href="#shop"
+              onClick={() => setOpen(false)}
+              className="btn-shine relative grid h-[54px] w-full place-items-center overflow-hidden rounded-full text-[12px] font-semibold uppercase tracking-[0.2em] text-ink active:scale-[.98]"
+              style={{ background: 'linear-gradient(135deg, #E8D3A8 0%, #B08D57 100%)' }}
+            >
+              <span className="relative z-10">Shop Now</span>
+            </a>
+
+            {/* Contact Info */}
+            <div className="mt-8 flex flex-col items-center gap-3">
+              <span className="text-[9px] uppercase tracking-[0.3em] text-mist/70">Get in touch</span>
+              <div className="flex flex-col items-center gap-1.5">
+                <a href="tel:+917987266411" className="text-[14px] font-medium tracking-wide text-cream hover:text-gold transition-colors">
+                  +91 79872 66411
+                </a>
+                <a href="mailto:rupurperfumes@gmail.com" className="text-[13px] text-mist hover:text-gold transition-colors">
+                  rupurperfumes@gmail.com
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <style>{`
-        .nav-in { animation: navIn .8s cubic-bezier(.2,.8,.2,1) both; }
+        .nav-in { animation: navIn .8s cubic-bezier(.19, 1, .22, 1) both; }
         @keyframes navIn { from { transform: translateY(-100%); opacity: 0; } to { transform: none; opacity: 1; } }
 
         .nav-link::after {
-          content: ''; position: absolute; left: 50%; bottom: 0; height: 2px; width: 0;
-          background: #D9A35B; border-radius: 2px; transform: translateX(-50%);
-          transition: width .35s cubic-bezier(.2,.8,.2,1);
+          content: ''; position: absolute; left: 50%; bottom: -6px; height: 1px; width: 0;
+          background: #D4B27A; transform: translateX(-50%);
+          transition: width .4s cubic-bezier(.19, 1, .22, 1);
+          box-shadow: 0 0 8px rgba(212,178,122,0.6);
         }
         .nav-link:hover::after, .nav-link[data-active="true"]::after { width: 100%; }
 
         .btn-shine::after {
           content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
-          background: linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent);
-          transform: skewX(-20deg); animation: shine 3.2s ease-in-out infinite;
+          background: linear-gradient(100deg, transparent, rgba(255,255,255,.5), transparent);
+          transform: skewX(-20deg); animation: shine 3.4s 1.2s ease-in-out infinite;
         }
-        @keyframes shine { 0%, 60% { left: -60%; } 100% { left: 130%; } }
-
-        @media (prefers-reduced-motion: reduce) {
-          .nav-in, .btn-shine::after { animation: none; }
-        }
+        @keyframes shine { 0%, 65% { left: -60%; } 100% { left: 130%; } }
       `}</style>
     </>
   );
@@ -176,8 +220,15 @@ function ScrollProgress() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
   return (
-    <div className="absolute inset-x-0 bottom-0 h-[2px] bg-white/5">
-      <div className="h-full origin-left bg-gradient-to-r from-[#B08D57] via-[#F3D59B] to-[#E8562A]" style={{ transform: `scaleX(${p})` }} />
+    <div className="absolute inset-x-0 bottom-0 h-px bg-white/[0.06]">
+      <div
+        className="h-full origin-left"
+        style={{
+          transform: `scaleX(${p})`,
+          background: 'linear-gradient(90deg, #8A6A3B 0%, #E8D3A8 55%, #D4B27A 100%)',
+          boxShadow: '0 0 8px rgba(232,211,168,0.5)',
+        }}
+      />
     </div>
   );
 }
